@@ -3,6 +3,7 @@
 #include<vector>
 #include<functional>
 #include <fstream>
+#include "odefunction.hpp"
 
 
 class Function{
@@ -26,12 +27,13 @@ class Function{
 };
 
 //template<int Rows, int Columns>
-Eigen::MatrixXd calculate(std::vector<Function> f, std::vector<std::vector<double>> params, double input){
+Eigen::MatrixXd calculate(std::vector<OdeFunction> f, std::vector<std::vector<double>> params, double input){
     Eigen::MatrixXd mat(f.size(), 1);
     for(int i = 0; i < f.size() - 1; i++)
         mat(i, 0) = f[i](params[i]);
-    
-    mat(f.size() - 1, 0) = f[f.size() - 1](params[f.size() - 1]) + input;
+
+    params[f.size() - 1].push_back(input);
+    mat(f.size() - 1, 0) = f[f.size() - 1](params[f.size() - 1]);
     
     return mat;
 }
@@ -85,7 +87,7 @@ std::vector<std::vector<double>> calculateParamsForK4(Eigen::MatrixXd y, Eigen::
 }
 
 template<int Rows, int Columns>
-int rungaKutta4Ode(double t0, double tFinal, double deltaT, Eigen::MatrixXd y0, std::vector<Function> f, Function sysInput){
+int rungaKutta4Ode(double t0, double tFinal, double deltaT, Eigen::MatrixXd y0, std::vector<OdeFunction> f, Function sysInput){
 
     std::ofstream file("data.txt");
     if (!file.is_open()) {
@@ -120,20 +122,24 @@ int rungaKutta4Ode(double t0, double tFinal, double deltaT, Eigen::MatrixXd y0, 
 }
 
 int main(){
+    
+    std::string ode("y'''=-2.5y''-8y'-2y-1u");
+
 
     std::vector<double> vek1 = {1.};
-    std::vector<double> vek2 = {-1.};
-
-    Function f1(vek1);
-    Function f2(vek2);
     Function f3(vek1);
 
-    std::vector<Function> F = {f2};
-    Eigen::MatrixXd y0(1, 1);
-    y0(0, 0) = 0;
-    //y0(1, 0) = 2;
-    //y0(2, 0) = 0;
+    int sysOrder = OdeFunction::systemOrder(ode);
+    std::vector<OdeFunction> F;
+    for(int i = 0; i < sysOrder - 1; i++)
+        F.push_back(OdeFunction({1}));
+    F.push_back(OdeFunction(ode));
 
-    rungaKutta4Ode<Eigen::Dynamic, Eigen::Dynamic>(0, 20, 0.001, y0, F, f3);
+    Eigen::MatrixXd y0(3, 1);
+    y0(0, 0) = 0;
+    y0(1, 0) = 0;
+    y0(2, 0) = 0;
+
+    rungaKutta4Ode<Eigen::Dynamic, Eigen::Dynamic>(0, 50, 0.001, y0, F, f3);
 
 }

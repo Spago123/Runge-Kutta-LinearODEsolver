@@ -52,7 +52,7 @@ double getCoef(std::string &equation, std::string &derivation){
 
 public:
     OdeFunction(std::string equation) {
-      constants.resize(numberOfApostrophes(equation) + 1);
+      constants.resize(systemOrder(equation) + 1);
       std::vector<std::string> derivations(prepareDerivations(constants.size() - 1));
       for(char &c : equation){
         if(c != '='){
@@ -65,7 +65,7 @@ public:
        }
     }
 
-    // OdeFunction(std::vector<double> consta) : constants(consta) {}
+    OdeFunction(std::initializer_list<double> consta) : constants(consta) {}
 
     double operator()(std::vector<double> var) {
         double sum = 0;
@@ -98,6 +98,18 @@ public:
 
     std::vector<double> getConstants(){
         return constants;
+    }
+
+    static int systemOrder(std::string str){
+      int cnt = 0;
+        for (int i = 0; i < str.length() - 1; i++) {
+            if (str[i] == 'y') {
+                while (str[++i] == '\'')
+                    cnt++;
+                break;
+            }
+        }
+        return cnt;
     }
 };
 
