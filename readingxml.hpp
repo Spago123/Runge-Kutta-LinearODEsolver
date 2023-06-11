@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <Eigen/Dense>
 #include "rapidxml.hpp"
 
 class ReadingXML{
@@ -18,8 +19,12 @@ class ReadingXML{
         rootNode = doc.first_node("ODE");
     }
 
-    double getStartingTime(){
-        return std::stod(rootNode->first_node("t0")->value());
+    double getStartTime(){
+        return std::stod(rootNode->first_node("startTime")->value());
+    }
+
+    double getStopTime(){
+        return std::stod(rootNode->first_node("stopTime")->value());
     }
 
     double getStep(){
@@ -30,11 +35,15 @@ class ReadingXML{
         return rootNode->first_node("equation")->value();
     }
 
+    std::string getFile(){
+        return rootNode->first_node("file")->value();
+    }
+
     std::string getSystemInput(){
         return rootNode->first_node("U")->value();
     }
 
-    std::vector<double> getInitCond(){
+    Eigen::MatrixXd getInitCond(){
         std::vector<double> initCond;
         rapidxml::xml_node<>* initialConditions = rootNode->first_node("initialConditions");
 
@@ -42,7 +51,11 @@ class ReadingXML{
             initCond.push_back(std::stod(conditions->value()));
         }
 
-        return initCond;
+        Eigen::MatrixXd initCond_(initCond.size(), 1);
+        for(int i = 0; i < initCond.size(); i++)
+            initCond_(i, 0) = initCond[i];
+
+        return initCond_;
     }
 };
 

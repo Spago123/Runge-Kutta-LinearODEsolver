@@ -2,22 +2,24 @@
   <!--Please use latex format while entering mathematical operations-->
   <!--System description, NOTE: the highest order of the ode must be on the left side-->
   <equation>
-    y''=-0.5y'-2y+1u
+    y''=-1y''-1y+4u
   </equation>
 
   <!--Initial conditions-->
   <initialConditions>
-     <y0> 2 </y0>
-     <y1> 3 </y1>
-     <y2> 4 </y2>
+     <y0> 0 </y0>
+     <y1> 0 </y1>
   </initialConditions>
 
   <!--System input-->
   <U>
-    t
+    1
   </U>
 
-  <t0>0</t0>
+  <startTime>0</startTime>
+  <stopTime>20</stopTime>
   <deltaT>0.0001</deltaT>
+
+  <file>example1.txt</file>
   
 </ODE>
