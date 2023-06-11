@@ -1,5 +1,5 @@
 % Read the data from the text file as a table
-dataTable = readtable('C:\Users\acer\OneDrive - Faculty of Electrical Engineering Sarajevo\Desktop\GNU OCTAVE\VSCode_\Srees\data.txt', 'Delimiter', '\t');
+dataTable = readtable('C:\Users\acer\OneDrive - Faculty of Electrical Engineering Sarajevo\Desktop\GNU OCTAVE\VSCode_\Srees\rez1.txt', 'Delimiter', '\t');
 
 % Access the columns of the table
 column1 = dataTable(:, 1);
