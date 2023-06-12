@@ -2,7 +2,7 @@
   <!--Please use latex format while entering mathematical operations-->
   <!--System description, NOTE: the highest order of the ode must be on the left side-->
   <equation>
-    y''=-1y''-1y+4u
+    y''=-1y'-1y+4u
   </equation>
 
   <!--Initial conditions-->
